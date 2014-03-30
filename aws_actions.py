@@ -10,12 +10,14 @@ __status__ = "Development"
 
 import os
 import sys
-import data
 
 from database import DataBase
+from config import Config
 
 if __name__ == '__main__':
-	dbData = data.data['database']
+	config = Config()
+
+	dbData = config.data['database']
 
 	# Connect to MySQL DB
 	db = DataBase(dbData['host'], dbData['user'], dbData['pass'], dbData['name'])
