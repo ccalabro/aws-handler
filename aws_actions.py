@@ -13,11 +13,18 @@ import sys
 
 from database import DataBase
 from config import Config
+from amazon import Amazon
 
 if __name__ == '__main__':
 	config = Config()
 
 	dbData = config.data['database']
+	awsData = config.data['aws']
 
 	# Connect to MySQL DB
 	db = DataBase(dbData['host'], dbData['user'], dbData['pass'], dbData['name'])
+
+	# Connect to AWS
+	amazon = Amazon(awsData['key_name'], awsData['secret_key'])
+
+	print amazon
