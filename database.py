@@ -56,9 +56,36 @@ class DataBase():
 		:param value: Value to search.
 
 		:rtype: dict
-		:return: Domain Information.
+		:return: Model Information.
         """
 		query = 'SELECT * FROM ' + table + ' WHERE ' + field + ' = "' + str(value) + '";'
 		cursor.execute(query)
 
 		return cursor.fetchone()
+
+	""" UPDATE functions. """
+
+	def update_by_id(self, cursor, table, changes, where_id):
+		"""
+        Update fields in any table.
+
+		:type cursor: cursor
+		:param cursor: Pointer to DB Connection.
+
+		:type table: string
+		:param table: SQL Table Name.
+
+		:type changes: dict
+		:param changes: Dictionary that contains field to update and their related value..
+
+		:type where_id: string
+		:param where_id: ID row value where the update will be performed.
+        """
+		change = ', '.join("{!s} = {!r}".format(k,str(v)) for (k,v) in changes.iteritems())
+
+		query = 'UPDATE ' + table + ' SET ' + change + ' WHERE id = ' + str(where_id) + ';'
+		try:
+			cursor.execute(query)
+
+		except Exception, e:
+			print e

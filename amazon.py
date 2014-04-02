@@ -42,3 +42,29 @@ class Amazon():
 				}
 
 		return current_dns
+
+	def modify_dns(self, domain, dest_ip):
+		"""
+        Modify DNS A record.
+
+		:type domain: dict
+		:param domain: Domain to change including their information.
+
+		:type dest_ip: string
+		:param dest_ip: Destination IP address.
+        """
+		domain_name = domain['name']
+
+		rrs = ResourceRecordSets(self.route53conn, domain['aws_zone_id'])
+		current_dns = self.get_current_dns(domain['aws_zone_id'], domain_name)
+
+		if current_dns[domain_name]['destination'] == dest_ip:
+			return False
+
+		#change domain
+		change = rrs.add_change("DELETE", domain_name, "A", 300)
+		change.add_value(current_dns[domain_name]['destination'])
+		change = rrs.add_change("CREATE", domain_name, "A", 300)
+		change.add_value(dest_ip)
+
+		return rrs.commit()

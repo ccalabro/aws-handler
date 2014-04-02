@@ -37,7 +37,12 @@ class Config:
 
 		check_parser = subparsers.add_parser('check', help = 'DNS Checking.')
 		check_parser.set_defaults(which = 'check')
-		check_parser.add_argument('domains', help='Domains to check. Can be a list. (ex: domain1, domain2, domain3) or "all"')
+		check_parser.add_argument('domains', help = 'Domains to check. Can be a list. (ex: domain1, domain2, domain3) or "all"')
+
+		modify_parser = subparsers.add_parser('modify', help = 'DNS Modification.')
+		modify_parser.set_defaults(which = 'modify')
+		modify_parser.add_argument('domains', help = 'Domains to modify. Can be a list. (ex: domain1, domain2, domain3) or "all"')
+		modify_parser.add_argument('server', help = 'Destination Server Name.')
 
 		return parser.parse_args()
 
@@ -48,6 +53,10 @@ class Config:
 		# domains
 		if 'domains' in args:
 			setattr(self, 'domains', self.prepare_domains_list())
+
+		# server
+		if 'server' in args:
+			setattr(self, 'server', args.server)
 
 	def prepare_domains_list(self):
 		return args.domains.split(',')
