@@ -27,4 +27,20 @@ if __name__ == '__main__':
 	# Connect to AWS
 	amazon = Amazon(awsData['key_name'], awsData['secret_key'])
 
-	print amazon
+	if hasattr(config, 'domains') and config.domains == ['all']:
+		config.domains = []
+		domainsList = db.get_all(db.cursor, 'domains')
+		if domainsList == []:
+			sys.exit('No domains records on database.')
+		for d in domainsList:
+			config.domains.append(d['name'])
+
+	if config.action == 'check':
+		for domain_name in config.domains:
+			domain = db.get(db.cursor, 'domains', 'name', domain_name)
+			current_dns = amazon.get_current_dns(domain['aws_zone_id'], domain_name)
+
+			# Get server by IP address
+			server = db.get(db.cursor, 'servers', 'ip', current_dns[domain_name]['destination'])
+
+			print domain_name + ' -> ' + server['name'] + ' (' + current_dns[domain_name]['destination'] + ')'

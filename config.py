@@ -28,9 +28,26 @@ class Config:
 			}
 		}
 
+		self.set()
+
 	def parser(self):
 		parser = ArgumentParser(description = "Update and check DNS's A records on Route53. Change EC2 Instances types.")
 
 		subparsers = parser.add_subparsers(help = 'DNS & EC2 Actions')
 
+		check_parser = subparsers.add_parser('check', help = 'DNS Checking.')
+		check_parser.set_defaults(which = 'check')
+		check_parser.add_argument('domains', help='Domains to check. Can be a list. (ex: domain1, domain2, domain3) or "all"')
+
 		return parser.parse_args()
+
+	def set(self):
+		# task to perform
+		setattr(self, 'action', args.which)
+
+		# domains
+		if 'domains' in args:
+			setattr(self, 'domains', self.prepare_domains_list())
+
+	def prepare_domains_list(self):
+		return args.domains.split(',')
