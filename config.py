@@ -8,6 +8,8 @@ from argparse import ArgumentParser
 
 args = None
 
+scale_values = ['up', 'down']
+
 class Config:
 	"""Configuration class."""
 
@@ -44,6 +46,11 @@ class Config:
 		modify_parser.add_argument('domains', help = 'Domains to modify. Can be a list. (ex: domain1, domain2, domain3) or "all"')
 		modify_parser.add_argument('server', help = 'Destination Server Name.')
 
+		scale_parser = subparsers.add_parser('scale', help = 'Scale up or Scale down a EC2 Instance.')
+		scale_parser.set_defaults(which = 'scale')
+		scale_parser.add_argument('server', help = 'Server Name to scale.')
+		scale_parser.add_argument('type', choices = scale_values, help = 'Scale type (up or down).')
+
 		return parser.parse_args()
 
 	def set(self):
@@ -57,6 +64,10 @@ class Config:
 		# server
 		if 'server' in args:
 			setattr(self, 'server', args.server)
+
+		# scale type
+		if 'type' in args:
+			setattr(self, 'type', args.type)
 
 	def prepare_domains_list(self):
 		return args.domains.split(',')

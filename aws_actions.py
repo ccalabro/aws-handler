@@ -80,3 +80,14 @@ if __name__ == '__main__':
 			db.update_by_id(db.cursor, 'domains', changes, domain['id'])
 
 			print '[OK] ' + domain_name
+
+	if config.action == 'scale':
+		# Fetch servers to change
+		server = db.get(db.cursor, 'servers', 'name', config.server)
+
+		changed = amazon.change_ec2(server, config.type)
+
+		if changed:
+			print '[OK] ' + server['name'] + ' was changed succesfully.'
+		else:
+			print "[ERROR] " + server['name'] + " wasn't changed succesfully."
