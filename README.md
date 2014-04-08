@@ -11,7 +11,7 @@ This project provides actions related to DNS management and EC2 Instances scale.
 
 You must specify database's and aws' connection data on config.py file.
 
-self.data = {
+`self.data = {
 	'database': {
 		'host': 'xxxx',
 		'user': 'xxxx',
@@ -22,7 +22,7 @@ self.data = {
 		'key_name': 'xxxx',
 		'secret_key': 'xxxx'
 	}
-}
+}`
 
 The DNS zones must be hosted on Route53.
 
